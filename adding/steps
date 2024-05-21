@@ -1,0 +1,154 @@
+// const { compileFunction } = require("vm")
+
+// make a folder and move in it
+// truffle init
+// make a contract in contracts ex AddNumbers.sol
+// add this in 
+// // contracts/AddNumbers.sol
+// // SPDX-License-Identifier: MIT
+// pragma solidity ^0.8.0;
+
+// contract AddNumbers {
+//     uint public sum;
+
+//     function add(uint a, uint b) public {
+//         sum = a + b;
+//     }
+// }
+// add this in truffle-config.js
+// // truffle-config.js
+// module.exports = {
+//   networks: {
+//     development: {
+//       host: "127.0.0.1",
+//       port: 7545,
+//       network_id: "*", // Match any network id
+//     },
+//   },
+//   compilers: {
+//     solc: {
+//       version: "0.8.0", // Fetch exact version from solc-bin (default: truffle's version)
+//     },
+//   },
+// };
+// create 2_deploy_contracts.js in migrations
+// and add this 
+// // migrations/2_deploy_contracts.js
+// const AddNumbers = artifacts.require("AddNumbers");
+
+// module.exports = function (deployer) {
+//   deployer.deploy(AddNumbers);
+// };
+// truffle compile
+// truffle migrate
+// set up react PromiseRejectionEventnpx create-react-app client
+// cd client
+// npm i web3
+// add this in app.js
+// // client/src/App.js
+// import React, { useState, useEffect } from 'react';
+// import Web3 from 'web3';
+// import AddNumbers from './contracts/AddNumbers.json';
+
+// function App() {
+//   const [account, setAccount] = useState('');
+//   const [contract, setContract] = useState(null);
+//   const [a, setA] = useState('');
+//   const [b, setB] = useState('');
+//   const [sum, setSum] = useState('');
+//   const [errorMessage, setErrorMessage] = useState('');
+
+//   useEffect(() => {
+//     const loadWeb3 = async () => {
+//       if (window.ethereum) {
+//         window.web3 = new Web3(window.ethereum);
+//         try {
+//           await window.ethereum.request({ method: 'eth_requestAccounts' });
+//         } catch (error) {
+//           setErrorMessage('Failed to access accounts. Please ensure MetaMask is installed and account access is granted.');
+//           console.error('Error accessing accounts:', error);
+//         }
+//       } else if (window.web3) {
+//         window.web3 = new Web3(window.web3.currentProvider);
+//       } else {
+//         setErrorMessage('Non-Ethereum browser detected. You should consider trying MetaMask!');
+//       }
+//     };
+
+//     const loadBlockchainData = async () => {
+//       const web3 = window.web3;
+//       try {
+//         const accounts = await web3.eth.getAccounts();
+//         if (accounts.length === 0) {
+//           setErrorMessage('No accounts found. Please ensure MetaMask is unlocked.');
+//           return;
+//         }
+//         setAccount(accounts[0]);
+
+//         const networkId = await web3.eth.net.getId();
+//         const networkData = AddNumbers.networks[networkId];
+//         if (networkData) {
+//           const abi = AddNumbers.abi;
+//           const address = networkData.address;
+//           const contract = new web3.eth.Contract(abi, address);
+//           setContract(contract);
+//           const sum = await contract.methods.sum().call();
+//           setSum(sum.toString()); // Convert BigInt to string
+//         } else {
+//           setErrorMessage('Smart contract not deployed to detected network.');
+//         }
+//       } catch (error) {
+//         setErrorMessage('Failed to load blockchain data.');
+//         console.error('Error loading blockchain data:', error);
+//       }
+//     };
+
+//     loadWeb3().then(loadBlockchainData);
+//   }, []);
+
+//   const handleAddNumbers = async () => {
+//     if (!contract) {
+//       setErrorMessage('Contract is not loaded.');
+//       return;
+//     }
+//     try {
+//       console.log(`Sending transaction from account: ${account}`);
+//       await contract.methods.add(parseInt(a), parseInt(b)).send({ from: account });
+//       console.log('Transaction sent successfully');
+//       const result = await contract.methods.sum().call();
+//       console.log('Sum fetched from contract:', result);
+//       setSum(result.toString()); // Convert BigInt to string
+//     } catch (error) {
+//       setErrorMessage('Failed to add numbers. Please try again.');
+//       console.error('Error adding numbers:', error);
+//     }
+//   };
+
+//   return (
+//     <div className="App">
+//       <h1>Web3 Add Numbers DApp</h1>
+//       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+//       <p>Account: {account}</p>
+//       <input
+//         type="number"
+//         value={a}
+//         onChange={(e) => setA(e.target.value)}
+//         placeholder="Enter first number"
+//       />
+//       <input
+//         type="number"
+//         value={b}
+//         onChange={(e) => setB(e.target.value)}
+//         placeholder="Enter second number"
+//       />
+//       <button onClick={handleAddNumbers}>Add Numbers</button>
+//       <h2>Sum: {sum}</h2>
+//     </div>
+//   );
+// }
+
+// export default App;
+//  create contracts directory 
+//  and add a json that is in build 
+//  then run npm start
+//don't forget to connect to ganache 
